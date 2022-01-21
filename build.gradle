@@ -13,7 +13,13 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0'
+ext.buildnumber = 'DEV'
+if (System.getenv('BUILD_NUMBER') != null)
+    project.buildnumber = System.getenv('BUILD_NUMBER')
+else
+    logger.lifecycle "No build number detected, setting to DEV"
+
+version = "${mc_version}-${mod_version}.${buildnumber}"
 group = 'dev.theturkey.turkeydevutil'
 archivesBaseName = 'turkeydevutil'
 
@@ -111,7 +117,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.43'
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
