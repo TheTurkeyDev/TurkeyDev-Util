@@ -4,9 +4,17 @@
 
   "item.turkeydevutil.lime": "Lime",
   "item.turkeydevutil.rock_soup": "Rock Soup",
+  "item.turkeydevutil.ramen": "Ramen",
 
+  "item.turkeydevutil.cobblestone_helmet": "Cobblestone Helmet",
+  "item.turkeydevutil.cobblestone_chestplate": "Cobblestone Chestplate",
+  "item.turkeydevutil.cobblestone_leggings": "Cobblestone Leggings",
+  "item.turkeydevutil.cobblestone_boots": "Cobblestone Boots",
 
 
   "item.turkeydevutil.turkey_spawn_egg": "Turkey Spawn Egg",
-  "item.turkeydevutil.duck_spawn_egg": "Duck Spawn Egg"
+  "item.turkeydevutil.duck_spawn_egg": "Duck Spawn Egg",
+
+
+  "block.turkeydevutil.lime_crop": "Lime Seeds"
 }

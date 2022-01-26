@@ -1,0 +1,6 @@
+{
+  "parent": "block/crop",
+  "textures": {
+    "crop": "turkeydevutil:blocks/lime_crop_2"
+  }
+}
