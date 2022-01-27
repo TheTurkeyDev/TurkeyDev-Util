@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = TDUCore.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TDUItems
 {
+	public static TDUBaseItem LANYARD;
+
 	public static TDUBaseItem LIME;
 	public static TDUBaseItem ROCK_SOUP;
 	public static TDUBaseItem RAMEN;
@@ -26,6 +28,8 @@ public class TDUItems
 	@SubscribeEvent
 	public static void onItemRegistry(RegistryEvent.Register<Item> e)
 	{
+		e.getRegistry().register(LANYARD = new TDUBaseItem(initProps(), "lanyard"));
+
 		e.getRegistry().register(LIME = new TDUBaseItem(initFoodProps(TDUFoods.LIME), "lime"));
 		LIME.addLore("What? Is that not how it works?");
 		e.getRegistry().register(ROCK_SOUP = new ItemRockSoup());

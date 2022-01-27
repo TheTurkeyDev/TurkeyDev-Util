@@ -1,0 +1,24 @@
+{
+  "duck_quack": {
+    "category": "entity",
+    "sounds": [
+      {
+        "name": "turkeydevutil:duck_double_quack",
+        "stream": false
+      },
+      {
+        "name": "turkeydevutil:duck_single_quack",
+        "stream": false
+      }
+    ]
+  },
+  "turkey_gobble": {
+    "category": "entity",
+    "sounds": [
+      {
+        "name": "turkeydevutil:turkey_gobble",
+        "stream": false
+      }
+    ]
+  }
+}

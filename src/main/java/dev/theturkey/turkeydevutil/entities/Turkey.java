@@ -1,6 +1,8 @@
 package dev.theturkey.turkeydevutil.entities;
 
+import dev.theturkey.turkeydevutil.util.TDUSounds;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -11,7 +13,6 @@ import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +27,8 @@ public class Turkey extends Animal
 		super(entityType, level);
 	}
 
-	protected void registerGoals() {
+	protected void registerGoals()
+	{
 		this.goalSelector.addGoal(0, new FloatGoal(this));
 		this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
 		this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
@@ -47,5 +49,10 @@ public class Turkey extends Animal
 	public static AttributeSupplier.Builder createAttributes()
 	{
 		return Turkey.createMobAttributes().add(Attributes.MAX_HEALTH, 4.0D).add(Attributes.MOVEMENT_SPEED, 0.25D);
+	}
+
+	protected SoundEvent getAmbientSound()
+	{
+		return TDUSounds.TURKEY_GOBBLE;
 	}
 }
