@@ -28,7 +28,14 @@ public class Duck extends Chicken
 		return TDUEntityType.DUCK.create(level);
 	}
 
-	protected SoundEvent getAmbientSound() {
+	protected SoundEvent getAmbientSound()
+	{
 		return TDUSounds.DUCK_QUACK;
+	}
+
+	public void aiStep()
+	{
+		this.eggTime = 9999;
+		super.aiStep();
 	}
 }

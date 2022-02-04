@@ -13,7 +13,7 @@
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "turkeydevutil:lime",
+                  "block": "turkeydevutil:lime_crop",
                   "properties": {
                     "age": "7"
                   }
@@ -59,7 +59,7 @@
       "conditions": [
         {
           "condition": "minecraft:block_state_property",
-          "block": "turkeydevutil:lime",
+          "block": "turkeydevutil:lime_crop",
           "properties": {
             "age": "7"
           }

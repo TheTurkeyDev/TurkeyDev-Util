@@ -18,6 +18,7 @@ public class TDUItems
 	public static TDUBaseItem LIME;
 	public static TDUBaseItem ROCK_SOUP;
 	public static TDUBaseItem RAMEN;
+	public static TDUBaseItem ICE_CREAM;
 	public static TDUBaseBlockItem LIME_SEEDS;
 
 	public static TDUArmor COBBLESTONE_HELMET;
@@ -32,6 +33,8 @@ public class TDUItems
 
 		e.getRegistry().register(LIME = new TDUBaseItem(initFoodProps(TDUFoods.LIME), "lime"));
 		LIME.addLore("What? Is that not how it works?");
+		e.getRegistry().register(ICE_CREAM = new TDUBaseItem(initFoodProps(TDUFoods.ICE_CREAM), "ice_cream"));
+		ICE_CREAM.addLore("Cones sold separately");
 		e.getRegistry().register(ROCK_SOUP = new ItemRockSoup());
 		e.getRegistry().register(RAMEN = new TDUBaseItem(initFoodProps(TDUFoods.RAMEN), "ramen"));
 		e.getRegistry().register(LIME_SEEDS = new TDUBaseBlockItem(TDUBlocks.LIME_CROP, initProps(), "lime_seeds"));
