@@ -20,5 +20,13 @@
         "stream": false
       }
     ]
+  },
+  "j2tc.welcome":
+  {
+    "category": "master",
+    "subtitle": "Welcome to your doom",
+    "sounds": [
+      "turkeydevutil:welcome_to_your_doom"
+    ]
   }
 }
