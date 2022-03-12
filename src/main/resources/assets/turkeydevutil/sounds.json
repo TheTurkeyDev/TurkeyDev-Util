@@ -21,12 +21,14 @@
       }
     ]
   },
-  "j2tc.welcome":
-  {
+  "j2tc.welcome": {
     "category": "master",
     "subtitle": "Welcome to your doom",
     "sounds": [
-      "turkeydevutil:j2tc.welcome"
+      {
+        "name": "turkeydevutil:j2tc.welcome",
+        "stream": false
+      }
     ]
   }
 }
