@@ -25,7 +25,7 @@ public class TDUArmor extends ArmorItem
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.putAll(super.getDefaultAttributeModifiers(slot));
 		UUID uuid = ARMOR_MODIFIER_UUID_PER_SLOT[slot.getIndex()];
-		builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(uuid, "Armor speed adjustment", -0.10f, AttributeModifier.Operation.MULTIPLY_BASE));
+		builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(uuid, "Armor speed adjustment", -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
 		this.defaultModifiers = builder.build();
 	}
 
