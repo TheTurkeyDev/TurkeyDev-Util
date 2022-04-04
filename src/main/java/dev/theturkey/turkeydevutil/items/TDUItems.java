@@ -21,6 +21,7 @@ public class TDUItems
 	public static TDUBaseItem RAMEN;
 	public static TDUBaseItem ICE_CREAM;
 	public static TDUBaseItem TOAST;
+	public static TDUBaseItem COOKIE;
 
 	public static TDUBaseBlockItem LIME_SEEDS;
 
@@ -45,6 +46,7 @@ public class TDUItems
 		e.getRegistry().register(RAMEN = new TDUBaseItem(initFoodProps(TDUFoods.RAMEN), "ramen"));
 		e.getRegistry().register(LIME_SEEDS = new TDUBaseBlockItem(TDUBlocks.LIME_CROP, initProps(), "lime_seeds"));
 		e.getRegistry().register(TOAST = new TDUBaseItem(initFoodProps(TDUFoods.TOAST), "toast"));
+		e.getRegistry().register(COOKIE = new TDUBaseItem(initFoodProps(TDUFoods.COOKIE), "cookie"));
 		//TOAST.addLore("DarkToasto");
 
 		e.getRegistry().register(COBBLESTONE_HELMET = new TDUArmor(TDUArmorMaterials.COBBLESTONE, EquipmentSlot.HEAD, initArmorProps()));
