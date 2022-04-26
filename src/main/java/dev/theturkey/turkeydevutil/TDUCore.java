@@ -3,6 +3,7 @@ package dev.theturkey.turkeydevutil;
 import dev.theturkey.turkeydevutil.client.ClientHandler;
 import dev.theturkey.turkeydevutil.entities.TDUEntityType;
 import dev.theturkey.turkeydevutil.items.TDUItems;
+import dev.theturkey.turkeydevutil.listeners.UnstableIngotListener;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,7 +50,7 @@ public class TDUCore
 
 	private void setup(final FMLCommonSetupEvent event)
 	{
-
+		MinecraftForge.EVENT_BUS.register(new UnstableIngotListener());
 	}
 
 	// You can use SubscribeEvent and let the Event Bus discover methods to call
