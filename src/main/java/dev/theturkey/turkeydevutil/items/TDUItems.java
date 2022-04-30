@@ -17,6 +17,7 @@ public class TDUItems
 	public static TDUBaseItem BOOK;
 	public static TDUBaseItem UNSTABLE_INGOT;
 	public static TDUBaseItem CONDENSED_CORE;
+	public static TDUBaseItem CALCULATOR;
 
 	public static TDUBaseItem LIME;
 	public static TDUBaseItem ROCK_SOUP;
@@ -41,6 +42,7 @@ public class TDUItems
 		BOOK.addLore("How do I use this?");
 		e.getRegistry().register(UNSTABLE_INGOT = new ItemUnstableIngot());
 		e.getRegistry().register(CONDENSED_CORE = new TDUBaseItem(initProps(), "condensed_core"));
+		e.getRegistry().register(CALCULATOR = new TDUBaseItem(initProps().durability(128), "calculator"));
 
 		e.getRegistry().register(LIME = new TDUBaseItem(initFoodProps(TDUFoods.LIME), "lime"));
 		LIME.addLore("What? Is that not how it works?");
