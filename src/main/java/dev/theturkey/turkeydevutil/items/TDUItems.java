@@ -42,7 +42,7 @@ public class TDUItems
 		BOOK.addLore("How do I use this?");
 		e.getRegistry().register(UNSTABLE_INGOT = new ItemUnstableIngot());
 		e.getRegistry().register(CONDENSED_CORE = new TDUBaseItem(initProps(), "condensed_core"));
-		e.getRegistry().register(CALCULATOR = new TDUBaseItem(initProps().durability(128), "calculator"));
+		e.getRegistry().register(CALCULATOR = new ItemCalculator());
 
 		e.getRegistry().register(LIME = new TDUBaseItem(initFoodProps(TDUFoods.LIME), "lime"));
 		LIME.addLore("What? Is that not how it works?");
