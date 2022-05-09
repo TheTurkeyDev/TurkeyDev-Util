@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.DigDurabilityEnchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-
 import java.util.Random;
 
 public class ItemCalculator extends TDUBaseItem
@@ -16,7 +15,7 @@ public class ItemCalculator extends TDUBaseItem
 
 	public ItemCalculator()
 	{
-		super((new Properties()).durability(128), "calculator");
+		super((new Properties()).durability(128).craftRemainder(TDUItems.CALCULATOR), "calculator");
 	}
 
 	@Override
