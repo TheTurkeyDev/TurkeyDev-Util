@@ -57,6 +57,11 @@ public class Duck extends TamableAnimal
 		this.goalSelector.addGoal(8, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
 	}
 
+	public float getBrightness()
+	{
+		return 1.0F;
+	}
+
 	@Nullable
 	@Override
 	public Duck getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob mob)
