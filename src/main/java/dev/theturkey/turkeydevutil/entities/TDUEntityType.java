@@ -3,7 +3,6 @@ package dev.theturkey.turkeydevutil.entities;
 import dev.theturkey.turkeydevutil.TDUCore;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.animal.Chicken;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,6 +29,6 @@ public class TDUEntityType
 	public static void registerEntityAttributes(EntityAttributeCreationEvent event)
 	{
 		event.put(TURKEY, Turkey.createAttributes().build());
-		event.put(DUCK, Chicken.createAttributes().build());
+		event.put(DUCK, Duck.createAttributes().build());
 	}
 }
