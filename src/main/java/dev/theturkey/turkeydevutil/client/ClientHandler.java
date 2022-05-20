@@ -5,6 +5,7 @@ import dev.theturkey.turkeydevutil.blocks.TDUBlocks;
 import dev.theturkey.turkeydevutil.client.models.TurkeyModel;
 import dev.theturkey.turkeydevutil.client.renderer.DuckRenderer;
 import dev.theturkey.turkeydevutil.client.renderer.TurkeyRenderer;
+import dev.theturkey.turkeydevutil.client.renderer.model.DuckModel;
 import dev.theturkey.turkeydevutil.entities.TDUEntityType;
 import net.minecraft.client.model.ChickenModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -35,6 +36,6 @@ public class ClientHandler
 	public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event)
 	{
 		event.registerLayerDefinition(TURKEY, TurkeyModel::createBodyLayer);
-		event.registerLayerDefinition(DUCK, ChickenModel::createBodyLayer);
+		event.registerLayerDefinition(DUCK, DuckModel::createBodyLayer);
 	}
 }

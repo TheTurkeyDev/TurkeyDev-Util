@@ -6,6 +6,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
@@ -17,14 +19,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.FollowParentGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.PanicGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.player.Player;
@@ -52,19 +47,19 @@ public class Duck extends TamableAnimal
 	protected void registerGoals()
 	{
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
-		this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
-		//this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, FOOD_ITEMS, false));
-		this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1D));
-		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
-		this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
-		this.goalSelector.addGoal(8, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+		this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 6.0F));
+		this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+		this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
+		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
+		this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
 
 		this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
 	}
-	public static AttributeSupplier.Builder createAttributes() {
+
+	public static AttributeSupplier.Builder createAttributes()
+	{
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 0.5D);
 	}
 
@@ -141,7 +136,6 @@ public class Duck extends TamableAnimal
 	public boolean isFood(@NotNull ItemStack p_28271_)
 	{
 		return false;
-		//return FOOD_ITEMS.test(p_28271_);
 	}
 
 	public void positionRider(@NotNull Entity p_28269_)
@@ -154,12 +148,55 @@ public class Duck extends TamableAnimal
 			((LivingEntity) p_28269_).yBodyRot = this.yBodyRot;
 	}
 
+	@Override
 	public boolean isInSittingPose()
 	{
 		return false;
 	}
 
+	@Override
+	public boolean isOrderedToSit()
+	{
+		return false;
+	}
+
+	@Override
 	public void setInSittingPose(boolean p_21838_)
 	{
 	}
+
+	public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand)
+	{
+		if(!this.isOwnedBy(player))
+			return InteractionResult.FAIL;
+
+		this.setTame(true);
+
+		ItemStack playerItem = player.getItemInHand(hand).copy();
+		ItemStack duckCopy = this.getMainHandItem().copy();
+		if(!playerItem.isEmpty() || !duckCopy.isEmpty())
+		{
+			this.setItemInHand(InteractionHand.MAIN_HAND, playerItem);
+			player.setItemInHand(hand, duckCopy);
+			return InteractionResult.SUCCESS;
+		}
+		return InteractionResult.PASS;
+	}
+
+	public boolean doHurtTarget(Entity p_30372_) {
+		boolean flag = p_30372_.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+		if (flag) {
+			this.doEnchantDamageEffects(this, p_30372_);
+		}
+
+		return flag;
+	}
+
+	public boolean isTame() {
+		int flag = this.entityData.get(DATA_FLAGS_ID);
+		boolean tame = (flag & 4) != 0;
+		return tame;
+	}
+
+
 }
