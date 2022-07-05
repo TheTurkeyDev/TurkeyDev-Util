@@ -1,7 +1,10 @@
 package dev.theturkey.turkeydevutil.entities;
 
+import dev.theturkey.turkeydevutil.TDUCore;
 import dev.theturkey.turkeydevutil.util.TDUSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -19,25 +22,39 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public class Duck extends TamableAnimal
 {
+	private final int SHEAR_DELAY = 20 * 60 * 5;
+
 	public float flap;
 	public float flapSpeed;
 	public float oFlapSpeed;
 	public float oFlap;
 	public float flapping = 1.0F;
 	private float nextFlap = 1.0F;
+
+	protected int shearTimer;
 
 	protected Duck(EntityType<? extends Duck> entityType, Level level)
 	{
@@ -47,12 +64,12 @@ public class Duck extends TamableAnimal
 	protected void registerGoals()
 	{
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-		this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 6.0F));
-		this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
-		this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
-		this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
-		this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+		this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 6.0F));
+		this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
+		this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
+		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, true));
+		this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 
 		this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
 		this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
@@ -98,6 +115,10 @@ public class Duck extends TamableAnimal
 	public void aiStep()
 	{
 		super.aiStep();
+
+		if(!this.level.isClientSide() && this.isAlive() && this.shearTimer > 0)
+			this.shearTimer--;
+
 		this.oFlap = this.flap;
 		this.oFlapSpeed = this.flapSpeed;
 		this.flapSpeed += (this.onGround ? -1.0F : 4.0F) * 0.3F;
@@ -167,12 +188,19 @@ public class Duck extends TamableAnimal
 
 	public @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand)
 	{
+		ItemStack playerItem = player.getItemInHand(hand).copy();
+
+		if(playerItem.is(TDUCore.SHEARS) && this.shearTimer == 0)
+		{
+			this.shearTimer = SHEAR_DELAY;
+			ItemStack feathers = new ItemStack(Items.FEATHER, TDUCore.RAND.nextInt(3) + 1);
+			ItemEntity ent = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), feathers);
+			level.addFreshEntity(ent);
+		}
+
 		if(!this.isOwnedBy(player))
 			return InteractionResult.FAIL;
 
-		this.setTame(true);
-
-		ItemStack playerItem = player.getItemInHand(hand).copy();
 		ItemStack duckCopy = this.getMainHandItem().copy();
 		if(!playerItem.isEmpty() || !duckCopy.isEmpty())
 		{
@@ -183,20 +211,52 @@ public class Duck extends TamableAnimal
 		return InteractionResult.PASS;
 	}
 
-	public boolean doHurtTarget(Entity p_30372_) {
-		boolean flag = p_30372_.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
-		if (flag) {
+	public boolean doHurtTarget(Entity p_30372_)
+	{
+		boolean flag = p_30372_.hurt(DamageSource.mobAttack(this), (float) ((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+		if(flag)
+		{
 			this.doEnchantDamageEffects(this, p_30372_);
 		}
 
 		return flag;
 	}
 
-	public boolean isTame() {
+	public boolean isTame()
+	{
 		int flag = this.entityData.get(DATA_FLAGS_ID);
-		boolean tame = (flag & 4) != 0;
-		return tame;
+		return (flag & 4) != 0;
 	}
 
+	public boolean isSpecialDuck()
+	{
+		Component name = this.getCustomName();
+		return name != null && name.getString().equals("Gertrud");
+	}
 
+	@Override
+	public boolean removeWhenFarAway(double p_21542_)
+	{
+		return !isSpecialDuck();
+	}
+
+	@Override
+	public boolean requiresCustomPersistence()
+	{
+		return this.isPassenger() || isSpecialDuck();
+	}
+
+	@Override
+	public void addAdditionalSaveData(@NotNull CompoundTag tag)
+	{
+		super.addAdditionalSaveData(tag);
+		tag.putInt("ShearTimer", this.shearTimer);
+	}
+
+	@Override
+	public void readAdditionalSaveData(@NotNull CompoundTag tag)
+	{
+		super.readAdditionalSaveData(tag);
+		this.shearTimer = tag.getInt("ShearTimer");
+	}
 }

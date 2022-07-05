@@ -5,7 +5,11 @@ import dev.theturkey.turkeydevutil.entities.TDUEntityType;
 import dev.theturkey.turkeydevutil.items.TDUItems;
 import dev.theturkey.turkeydevutil.listeners.DuckFriendSpawn;
 import dev.theturkey.turkeydevutil.listeners.UnstableIngotListener;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,13 +24,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
+
 @Mod(TDUCore.MOD_ID)
 public class TDUCore
 {
 	public static final String MOD_ID = "turkeydevutil";
-
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-
 	public static final CreativeModeTab MOD_TAB = new CreativeModeTab(MOD_ID)
 	{
 		@Override
@@ -35,6 +39,8 @@ public class TDUCore
 			return new ItemStack(TDUItems.LIME);
 		}
 	};
+	public static final TagKey<Item> SHEARS = ItemTags.create(new ResourceLocation("forge", "shears"));
+	public static final Random RAND = new Random();
 
 	public TDUCore()
 	{
