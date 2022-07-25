@@ -28,11 +28,16 @@ import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -41,12 +46,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
-public class Duck extends TamableAnimal
+public class Duck extends TamableAnimal implements RangedAttackMob
 {
-	private final int SHEAR_DELAY = 20 * 60 * 5;
-
 	public float flap;
 	public float flapSpeed;
 	public float oFlapSpeed;
@@ -67,7 +68,15 @@ public class Duck extends TamableAnimal
 		this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 6.0F));
 		this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
 		this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
-		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, true));
+		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, true)
+		{
+			@Override
+			public boolean canUse()
+			{
+				return !this.mob.isHolding(is -> is.getItem() instanceof BowItem) && super.canUse();
+			}
+		});
+		this.goalSelector.addGoal(4, new RangedBowAttackGoal<>(this, 1.0D, 40, 20.0F));
 		this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
 		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 
@@ -116,8 +125,16 @@ public class Duck extends TamableAnimal
 	{
 		super.aiStep();
 
-		if(!this.level.isClientSide() && this.isAlive() && this.shearTimer > 0)
+		if(!this.level.isClientSide() && this.isAlive() && getMainHandItem().is(TDUCore.SHEARS) && this.shearTimer > 0)
 			this.shearTimer--;
+
+		if(!this.level.isClientSide() && this.isAlive() && getMainHandItem().is(TDUCore.SHEARS) && this.shearTimer <= 0)
+		{
+			this.shearTimer = this.random.nextInt(6000) + 6000;
+			ItemStack feathers = new ItemStack(Items.FEATHER, TDUCore.RAND.nextInt(3) + 1);
+			ItemEntity ent = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), feathers);
+			level.addFreshEntity(ent);
+		}
 
 		this.oFlap = this.flap;
 		this.oFlapSpeed = this.flapSpeed;
@@ -190,14 +207,6 @@ public class Duck extends TamableAnimal
 	{
 		ItemStack playerItem = player.getItemInHand(hand).copy();
 
-		if(playerItem.is(TDUCore.SHEARS) && this.shearTimer == 0)
-		{
-			this.shearTimer = SHEAR_DELAY;
-			ItemStack feathers = new ItemStack(Items.FEATHER, TDUCore.RAND.nextInt(3) + 1);
-			ItemEntity ent = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), feathers);
-			level.addFreshEntity(ent);
-		}
-
 		if(!this.isOwnedBy(player))
 			return InteractionResult.FAIL;
 
@@ -258,5 +267,21 @@ public class Duck extends TamableAnimal
 	{
 		super.readAdditionalSaveData(tag);
 		this.shearTimer = tag.getInt("ShearTimer");
+	}
+
+	@Override
+	public void performRangedAttack(@NotNull LivingEntity ent, float p_33318_)
+	{
+		ItemStack itemstack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof BowItem)));
+		AbstractArrow abstractarrow = ProjectileUtil.getMobArrow(this, itemstack, p_33318_);
+		if(this.getMainHandItem().getItem() instanceof BowItem)
+			abstractarrow = ((BowItem) this.getMainHandItem().getItem()).customArrow(abstractarrow);
+		double d0 = ent.getX() - this.getX();
+		double d1 = ent.getY(0.333D) - abstractarrow.getY();
+		double d2 = ent.getZ() - this.getZ();
+		double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+		abstractarrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level.getDifficulty().getId() * 4));
+		this.playSound(SoundEvents.ARROW_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+		this.level.addFreshEntity(abstractarrow);
 	}
 }
