@@ -1,6 +1,7 @@
 package dev.theturkey.turkeydevutil.entities;
 
 import dev.theturkey.turkeydevutil.TDUCore;
+import dev.theturkey.turkeydevutil.entities.ai.FollowOwnerDimensionGoal;
 import dev.theturkey.turkeydevutil.util.TDUSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -77,7 +78,7 @@ public class Duck extends TamableAnimal implements RangedAttackMob
 			}
 		});
 		this.goalSelector.addGoal(4, new RangedBowAttackGoal<>(this, 1.0D, 40, 20.0F));
-		this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.0D, 10.0F, 2.0F, false));
+		this.goalSelector.addGoal(5, new FollowOwnerDimensionGoal(this, 1.0D, 10.0F, 2.0F, false));
 		this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
 
 		this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
