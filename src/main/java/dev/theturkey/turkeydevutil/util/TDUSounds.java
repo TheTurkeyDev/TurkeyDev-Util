@@ -12,6 +12,7 @@ public class TDUSounds
 {
 	public static SoundEvent DUCK_QUACK;
 	public static SoundEvent TURKEY_GOBBLE;
+	public static SoundEvent TURKEY_GOBBLE_DARKOSTO;
 	public static SoundEvent WELCOME;
 
 	@SubscribeEvent
@@ -21,6 +22,8 @@ public class TDUSounds
 		DUCK_QUACK = new SoundEvent(res).setRegistryName(res);
 		res = new ResourceLocation(TDUCore.MOD_ID, "turkey_gobble");
 		TURKEY_GOBBLE = new SoundEvent(res).setRegistryName(res);
+		res = new ResourceLocation(TDUCore.MOD_ID, "turkey_gobble_darkosto");
+		TURKEY_GOBBLE_DARKOSTO = new SoundEvent(res).setRegistryName(res);
 		res = new ResourceLocation(TDUCore.MOD_ID, "j2tc.welcome");
 		WELCOME = new SoundEvent(res).setRegistryName(res);
 

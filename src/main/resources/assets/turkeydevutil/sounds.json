@@ -21,6 +21,15 @@
       }
     ]
   },
+  "turkey_gobble_darkosto": {
+    "category": "entity",
+    "sounds": [
+      {
+        "name": "turkeydevutil:turkey_gobble_darkosto",
+        "stream": false
+      }
+    ]
+  },
   "j2tc.welcome": {
     "category": "master",
     "subtitle": "Welcome to your doom",

@@ -53,6 +53,8 @@ public class Turkey extends Animal
 
 	protected SoundEvent getAmbientSound()
 	{
+		if(((int) (Math.random() * 100)) == 4)
+			return TDUSounds.TURKEY_GOBBLE_DARKOSTO;
 		return TDUSounds.TURKEY_GOBBLE;
 	}
 }
