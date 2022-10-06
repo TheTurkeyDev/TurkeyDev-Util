@@ -1,6 +1,7 @@
 package dev.theturkey.turkeydevutil.items;
 
 import dev.theturkey.turkeydevutil.TDUCore;
+import dev.theturkey.turkeydevutil.blocks.BaseTDUBlock;
 import dev.theturkey.turkeydevutil.blocks.TDUBlocks;
 import dev.theturkey.turkeydevutil.entities.TDUEntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,6 +28,15 @@ public class TDUItems
 	public static TDUBaseItem COOKIE;
 
 	public static TDUBaseBlockItem LIME_SEEDS;
+	public static TDUBaseBlockItem GREED_GOLD_ORE;
+	public static TDUBaseBlockItem GREED_IRON_ORE;
+	public static TDUBaseBlockItem GREED_LAPIS_ORE;
+	public static TDUBaseBlockItem GREED_OIL_ORE;
+	public static TDUBaseBlockItem GREED_RANDOMITE_ORE;
+	public static TDUBaseBlockItem GREED_SILVER_ORE;
+	public static TDUBaseBlockItem SUGAR_COPPER_ORE;
+	public static TDUBaseBlockItem SUGAR_IRON_ORE;
+	public static TDUBaseBlockItem SUGAR_REDSTONE_ORE;
 
 	public static TDUArmor COBBLESTONE_HELMET;
 	public static TDUArmor COBBLESTONE_CHESTPLATE;
@@ -53,12 +63,21 @@ public class TDUItems
 		e.getRegistry().register(LIME_SEEDS = new TDUBaseBlockItem(TDUBlocks.LIME_CROP, initProps(), "lime_seeds"));
 		e.getRegistry().register(TOAST = new TDUBaseItem(initFoodProps(TDUFoods.TOAST), "toast"));
 		e.getRegistry().register(COOKIE = new TDUBaseItem(initFoodProps(TDUFoods.COOKIE), "cookie"));
-		//TOAST.addLore("DarkToasto");
 
 		e.getRegistry().register(COBBLESTONE_HELMET = new TDUArmor(TDUArmorMaterials.COBBLESTONE, EquipmentSlot.HEAD, initArmorProps()));
 		e.getRegistry().register(COBBLESTONE_CHESTPLATE = new TDUArmor(TDUArmorMaterials.COBBLESTONE, EquipmentSlot.CHEST, initArmorProps()));
 		e.getRegistry().register(COBBLESTONE_LEGGINS = new TDUArmor(TDUArmorMaterials.COBBLESTONE, EquipmentSlot.LEGS, initArmorProps()));
 		e.getRegistry().register(COBBLESTONE_BOOTS = new TDUArmor(TDUArmorMaterials.COBBLESTONE, EquipmentSlot.FEET, initArmorProps()));
+
+		e.getRegistry().register(GREED_GOLD_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_GOLD_ORE, initProps(), "greed_gold_ore"));
+		e.getRegistry().register(GREED_IRON_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_IRON_ORE, initProps(), "greed_iron_ore"));
+		e.getRegistry().register(GREED_LAPIS_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_LAPIS_ORE, initProps(), "greed_lapis_ore"));
+		e.getRegistry().register(GREED_OIL_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_OIL_ORE, initProps(), "greed_oil_ore"));
+		e.getRegistry().register(GREED_RANDOMITE_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_RANDOMITE_ORE, initProps(), "greed_randomite_ore"));
+		e.getRegistry().register(GREED_SILVER_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_SILVER_ORE, initProps(), "greed_silver_ore"));
+		e.getRegistry().register(SUGAR_COPPER_ORE = new TDUBaseBlockItem(TDUBlocks.SUGAR_COPPER_ORE, initProps(), "sugar_copper_ore"));
+		e.getRegistry().register(SUGAR_IRON_ORE = new TDUBaseBlockItem(TDUBlocks.SUGAR_IRON_ORE, initProps(), "sugar_iron_ore"));
+		e.getRegistry().register(SUGAR_REDSTONE_ORE = new TDUBaseBlockItem(TDUBlocks.SUGAR_REDSTONE_ORE, initProps(), "sugar_redstone_ore"));
 
 		e.getRegistry().register(new TDUSpawnEgg(() -> TDUEntityType.TURKEY, "turkey", 0x522900, 0xE68A00));
 		e.getRegistry().register(new TDUSpawnEgg(() -> TDUEntityType.DUCK, "duck", 0xA65300, 0x005300));

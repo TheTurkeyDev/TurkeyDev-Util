@@ -24,5 +24,13 @@
   "item.turkeydevutil.duck_spawn_egg": "Duck Spawn Egg",
 
 
-  "block.turkeydevutil.lime_crop": "Lime Seeds"
+  "block.turkeydevutil.lime_crop": "Lime Seeds",
+  "block.turkeydevutil.greed_gold_ore": "Greed Gold Ore",
+  "block.turkeydevutil.greed_iron_ore": "Greed Iron Ore",
+  "block.turkeydevutil.greed_lapis_ore": "Greed Lapis Ore",
+  "block.turkeydevutil.greed_oil_ore": "Greed Oil Ore",
+  "block.turkeydevutil.greed_randomite_ore": "Greed Randomite Ore",
+  "block.turkeydevutil.sugar_copper_ore": "Sugar Copper Ore",
+  "block.turkeydevutil.sugar_iron_ore": "Sugar Iron Ore",
+  "block.turkeydevutil.sugar_redstone_ore": "Sugar Redstone Ore"
 }
