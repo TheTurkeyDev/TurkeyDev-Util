@@ -1,7 +1,6 @@
 package dev.theturkey.turkeydevutil.items;
 
 import dev.theturkey.turkeydevutil.TDUCore;
-import dev.theturkey.turkeydevutil.blocks.BaseTDUBlock;
 import dev.theturkey.turkeydevutil.blocks.TDUBlocks;
 import dev.theturkey.turkeydevutil.entities.TDUEntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -34,6 +33,7 @@ public class TDUItems
 	public static TDUBaseBlockItem GREED_OIL_ORE;
 	public static TDUBaseBlockItem GREED_RANDOMITE_ORE;
 	public static TDUBaseBlockItem GREED_SILVER_ORE;
+	public static TDUBaseBlockItem GREED_DIAMOND_ORE;
 	public static TDUBaseBlockItem SUGAR_COPPER_ORE;
 	public static TDUBaseBlockItem SUGAR_IRON_ORE;
 	public static TDUBaseBlockItem SUGAR_REDSTONE_ORE;
@@ -75,6 +75,7 @@ public class TDUItems
 		e.getRegistry().register(GREED_OIL_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_OIL_ORE, initProps(), "greed_oil_ore"));
 		e.getRegistry().register(GREED_RANDOMITE_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_RANDOMITE_ORE, initProps(), "greed_randomite_ore"));
 		e.getRegistry().register(GREED_SILVER_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_SILVER_ORE, initProps(), "greed_silver_ore"));
+		e.getRegistry().register(GREED_DIAMOND_ORE = new TDUBaseBlockItem(TDUBlocks.GREED_DIAMOND_ORE, initProps(), "greed_diamond_ore"));
 		e.getRegistry().register(SUGAR_COPPER_ORE = new TDUBaseBlockItem(TDUBlocks.SUGAR_COPPER_ORE, initProps(), "sugar_copper_ore"));
 		e.getRegistry().register(SUGAR_IRON_ORE = new TDUBaseBlockItem(TDUBlocks.SUGAR_IRON_ORE, initProps(), "sugar_iron_ore"));
 		e.getRegistry().register(SUGAR_REDSTONE_ORE = new TDUBaseBlockItem(TDUBlocks.SUGAR_REDSTONE_ORE, initProps(), "sugar_redstone_ore"));

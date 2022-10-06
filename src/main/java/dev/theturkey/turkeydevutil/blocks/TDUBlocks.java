@@ -16,6 +16,7 @@ public class TDUBlocks
 	public static BaseTDUBlock GREED_OIL_ORE;
 	public static BaseTDUBlock GREED_RANDOMITE_ORE;
 	public static BaseTDUBlock GREED_SILVER_ORE;
+	public static BaseTDUBlock GREED_DIAMOND_ORE;
 	public static BaseTDUBlock SUGAR_COPPER_ORE;
 	public static BaseTDUBlock SUGAR_IRON_ORE;
 	public static BaseTDUBlock SUGAR_REDSTONE_ORE;
@@ -31,6 +32,7 @@ public class TDUBlocks
 		e.getRegistry().register(GREED_OIL_ORE = new BaseTDUBlock("greed_oil_ore"));
 		e.getRegistry().register(GREED_RANDOMITE_ORE = new BaseTDUBlock("greed_randomite_ore"));
 		e.getRegistry().register(GREED_SILVER_ORE = new BaseTDUBlock("greed_silver_ore"));
+		e.getRegistry().register(GREED_DIAMOND_ORE = new BaseTDUBlock("greed_diamond_ore"));
 		e.getRegistry().register(SUGAR_COPPER_ORE = new BaseTDUBlock("sugar_copper_ore"));
 		e.getRegistry().register(SUGAR_IRON_ORE = new BaseTDUBlock("sugar_iron_ore"));
 		e.getRegistry().register(SUGAR_REDSTONE_ORE = new BaseTDUBlock("sugar_redstone_ore"));
