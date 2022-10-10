@@ -9,12 +9,14 @@ import dev.theturkey.turkeydevutil.TDUCore;
 import dev.theturkey.turkeydevutil.entities.Duck;
 import dev.theturkey.turkeydevutil.entities.TDUEntityType;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -94,6 +96,25 @@ public class DuckFriendSpawn
 		}
 	}
 
+	public void spawnDuck(Level level, Player p)
+	{
+		Duck duck = TDUEntityType.DUCK.create(level);
+		if(duck == null)
+		{
+			TDUCore.LOGGER.error("The duck was null....");
+			return;
+		}
+		duck.setPos(p.position());
+		duck.setInvulnerable(true);
+		duck.setCustomNameVisible(true);
+		duck.setCustomName(new TextComponent("Gertrud"));
+		duck.setTame(true);
+		duck.setOwnerUUID(p.getUUID());
+		duck.setPersistenceRequired();
+		duck.setHealth(20f);
+		level.addFreshEntity(duck);
+	}
+
 	@SubscribeEvent
 	public void onServerWorldTick(TickEvent.WorldTickEvent event)
 	{
@@ -108,24 +129,30 @@ public class DuckFriendSpawn
 				if(p.getUUID().toString().equals(uuid))
 				{
 					Level level = event.world;
-					Duck duck = TDUEntityType.DUCK.create(level);
-					if(duck == null)
-					{
-						TDUCore.LOGGER.error("The duck was null....");
-						return;
-					}
-					duck.setPos(p.position());
-					duck.setInvulnerable(true);
-					duck.setCustomNameVisible(true);
-					duck.setCustomName(new TextComponent("Gertrud"));
-					duck.setTame(true);
-					duck.setOwnerUUID(p.getUUID());
-					duck.setPersistenceRequired();
-					duck.setHealth(20f);
-					level.addFreshEntity(duck);
+					spawnDuck(level, p);
 					ducksToSpawn.remove(i);
 					break;
 				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
+	{
+		spawnDuck(event.getPlayer().getLevel(), event.getPlayer());
+	}
+
+	@SubscribeEvent
+	public void onPlayerDie(LivingDeathEvent event)
+	{
+		if(event.getEntity() instanceof Player)
+		{
+			for(Duck d : event.getEntity().level.getNearbyEntities(Duck.class, TargetingConditions.forNonCombat(), event.getEntityLiving(), AABB.ofSize(event.getEntity().getEyePosition(), 50, 50, 50)))
+			{
+				LivingEntity owner = d.getOwner();
+				if(owner != null && owner.equals(event.getEntityLiving()))
+					d.kill();
 			}
 		}
 	}
