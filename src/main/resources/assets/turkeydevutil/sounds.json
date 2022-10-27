@@ -12,6 +12,15 @@
       }
     ]
   },
+  "im_a_duck": {
+    "category": "entity",
+    "sounds": [
+      {
+        "name": "turkeydevutil:im_a_duck",
+        "stream": false
+      }
+    ]
+  },
   "turkey_gobble": {
     "category": "entity",
     "sounds": [

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 public class TDUSounds
 {
 	public static SoundEvent DUCK_QUACK;
+	public static SoundEvent IM_A_DUCK;
 	public static SoundEvent TURKEY_GOBBLE;
 	public static SoundEvent TURKEY_GOBBLE_DARKOSTO;
 	public static SoundEvent WELCOME;
@@ -18,15 +19,17 @@ public class TDUSounds
 	@SubscribeEvent
 	public static void onSoundRegistry(RegistryEvent.Register<SoundEvent> e)
 	{
-		ResourceLocation res = new ResourceLocation(TDUCore.MOD_ID, "duck_quack");
-		DUCK_QUACK = new SoundEvent(res).setRegistryName(res);
-		res = new ResourceLocation(TDUCore.MOD_ID, "turkey_gobble");
-		TURKEY_GOBBLE = new SoundEvent(res).setRegistryName(res);
-		res = new ResourceLocation(TDUCore.MOD_ID, "turkey_gobble_darkosto");
-		TURKEY_GOBBLE_DARKOSTO = new SoundEvent(res).setRegistryName(res);
-		res = new ResourceLocation(TDUCore.MOD_ID, "j2tc.welcome");
-		WELCOME = new SoundEvent(res).setRegistryName(res);
+		DUCK_QUACK = genSoundEvent("duck_quack");
+		IM_A_DUCK = genSoundEvent("im_a_duck");
+		TURKEY_GOBBLE = genSoundEvent("turkey_gobble");
+		TURKEY_GOBBLE_DARKOSTO = genSoundEvent("turkey_gobble_darkosto");
+		WELCOME = genSoundEvent("j2tc.welcome");
 
-		e.getRegistry().registerAll(DUCK_QUACK, TURKEY_GOBBLE, WELCOME);
+		e.getRegistry().registerAll(DUCK_QUACK, IM_A_DUCK, TURKEY_GOBBLE, TURKEY_GOBBLE_DARKOSTO, WELCOME);
+	}
+
+	public static SoundEvent genSoundEvent(String soundID){
+		ResourceLocation res = new ResourceLocation(TDUCore.MOD_ID, soundID);
+		return new SoundEvent(res).setRegistryName(res);
 	}
 }

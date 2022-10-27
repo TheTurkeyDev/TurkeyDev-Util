@@ -104,6 +104,8 @@ public class Duck extends TamableAnimal implements RangedAttackMob
 
 	protected SoundEvent getAmbientSound()
 	{
+		if(((int) (Math.random() * 100)) == 4)
+			return TDUSounds.IM_A_DUCK;
 		return TDUSounds.DUCK_QUACK;
 	}
 
