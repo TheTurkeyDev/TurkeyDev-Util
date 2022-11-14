@@ -8,15 +8,17 @@ import com.google.gson.JsonParser;
 import dev.theturkey.turkeydevutil.TDUCore;
 import dev.theturkey.turkeydevutil.entities.Duck;
 import dev.theturkey.turkeydevutil.entities.TDUEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,16 +30,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 
 public class DuckFriendSpawn
 {
-
 	private static final List<String> ducksToSpawn = new ArrayList<>();
-	private static final Map<UUID, ItemStack> duckHeldItem = new HashMap<>();
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	@SubscribeEvent
@@ -102,26 +100,6 @@ public class DuckFriendSpawn
 		}
 	}
 
-	public Duck spawnDuck(Level level, Player p)
-	{
-		Duck duck = TDUEntityType.DUCK.create(level);
-		if(duck == null)
-		{
-			TDUCore.LOGGER.error("The duck was null....");
-			return null;
-		}
-		duck.setPos(p.position());
-		duck.setInvulnerable(true);
-		duck.setCustomNameVisible(true);
-		duck.setCustomName(new TextComponent("Gertrud"));
-		duck.setTame(true);
-		duck.setOwnerUUID(p.getUUID());
-		duck.setPersistenceRequired();
-		duck.setHealth(20f);
-		level.addFreshEntity(duck);
-		return duck;
-	}
-
 	@SubscribeEvent
 	public void onServerWorldTick(TickEvent.WorldTickEvent event)
 	{
@@ -136,7 +114,21 @@ public class DuckFriendSpawn
 				if(p.getUUID().toString().equals(uuid))
 				{
 					Level level = event.world;
-					spawnDuck(level, p);
+					Duck duck = TDUEntityType.DUCK.create(level);
+					if(duck == null)
+					{
+						TDUCore.LOGGER.error("The duck was null....");
+						return;
+					}
+					duck.setPos(p.position());
+					duck.setInvulnerable(true);
+					duck.setCustomNameVisible(true);
+					duck.setCustomName(new TextComponent("Gertrud"));
+					duck.setTame(true);
+					duck.setOwnerUUID(p.getUUID());
+					duck.setPersistenceRequired();
+					duck.setHealth(20f);
+					level.addFreshEntity(duck);
 					ducksToSpawn.remove(i);
 					break;
 				}
@@ -145,26 +137,68 @@ public class DuckFriendSpawn
 	}
 
 	@SubscribeEvent
-	public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
-	{
-		Duck duck = spawnDuck(event.getPlayer().getLevel(), event.getPlayer());
-		duck.setItemInHand(InteractionHand.MAIN_HAND, duckHeldItem.remove(event.getPlayer().getUUID()));
-	}
-
-	@SubscribeEvent
 	public void onPlayerDie(LivingDeathEvent event)
 	{
-		if(event.getEntity() instanceof Player)
+		for(Duck d : getDucks(event.getEntityLiving()))
 		{
-			for(Duck d : event.getEntity().level.getNearbyEntities(Duck.class, TargetingConditions.forNonCombat(), event.getEntityLiving(), AABB.ofSize(event.getEntity().getEyePosition(), 50, 50, 50)))
+			ServerPlayer player = (ServerPlayer) event.getEntityLiving();
+			BlockPos blockpos = player.getRespawnPosition();
+			ServerLevel serverlevel = player.server.getLevel(player.getRespawnDimension());
+			float f = player.getRespawnAngle();
+			if(serverlevel != null && blockpos != null)
 			{
-				LivingEntity owner = d.getOwner();
-				if(owner != null && owner.equals(event.getEntityLiving()))
+				Optional<Vec3> optional = Player.findRespawnPositionAndUseSpawnBlock(serverlevel, blockpos, f, true, true);
+				if(optional.isPresent())
 				{
-					duckHeldItem.put(owner.getUUID(), d.getItemInHand(InteractionHand.MAIN_HAND).copy());
-					d.kill();
+					d.changeDimension(serverlevel);
+					Vec3 vec = optional.get();
+					d.teleportTo(vec.x, vec.y, vec.z);
 				}
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerTP(EntityTeleportEvent event)
+	{
+		for(Duck d : getDucks(event.getEntity()))
+			d.teleportTo(event.getTargetX(), event.getTargetY(), event.getTargetZ());
+	}
+
+	@SubscribeEvent
+	public void onPlayerDimChange(PlayerEvent.PlayerChangedDimensionEvent event)
+	{
+		Player player = event.getPlayer();
+		for(Duck d : getDucks(player))
+		{
+			ServerLevel level = player.getServer().getLevel(event.getTo());
+			d.changeDimension(level);
+			d.teleportTo(player.position().x, player.position().y, player.position().z);
+		}
+	}
+
+	/**
+	 * Should only ever be 1 but....
+	 *
+	 * @param player the player
+	 * @return the player's ducks
+	 */
+	public List<Duck> getDucks(Entity player)
+	{
+		List<Duck> ducks = new ArrayList<>();
+		if(player.level.isClientSide())
+			return ducks;
+
+		if(player instanceof Player)
+		{
+			for(Duck d : ((ServerLevel) player.level).getEntities(TDUEntityType.DUCK, e -> true))
+			{
+				LivingEntity owner = d.getOwner();
+				if(owner != null && owner.equals(player))
+					ducks.add(d);
+			}
+		}
+
+		return ducks;
 	}
 }
