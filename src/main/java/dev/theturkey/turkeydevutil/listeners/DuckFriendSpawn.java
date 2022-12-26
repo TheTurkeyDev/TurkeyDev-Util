@@ -21,6 +21,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -37,19 +38,31 @@ public class DuckFriendSpawn
 {
 	private static final List<String> ducksToSpawn = new ArrayList<>();
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	private static File modPlayerFile;
 
 	@SubscribeEvent
 	public void onPlayerLoad(PlayerEvent.LoadFromFile event)
 	{
-		File f = event.getPlayerFile("tdu");
+		modPlayerFile = event.getPlayerFile("tdu");
+		loadDuckFile(event.getPlayerUUID());
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
+	{
+		loadDuckFile(event.getPlayer().getStringUUID());
+	}
+
+	public static void loadDuckFile(String playerUUID)
+	{
 		try
 		{
 			JsonObject json;
-			if(!f.exists())
+			if(!modPlayerFile.exists())
 			{
-				if(f.createNewFile())
+				if(modPlayerFile.createNewFile())
 				{
-					json = generateDefaultJson(f);
+					json = generateDefaultJson(modPlayerFile);
 				}
 				else
 				{
@@ -59,18 +72,18 @@ public class DuckFriendSpawn
 			}
 			else
 			{
-				JsonElement elem = JsonParser.parseReader(new FileReader(f));
+				JsonElement elem = JsonParser.parseReader(new FileReader(modPlayerFile));
 				if(elem.isJsonObject())
 					json = elem.getAsJsonObject();
 				else
-					json = generateDefaultJson(f);
+					json = generateDefaultJson(modPlayerFile);
 			}
 
 			if(!json.get("spawned_gertrud").getAsBoolean())
 			{
-				ducksToSpawn.add(event.getPlayerUUID());
+				ducksToSpawn.add(playerUUID);
 				json.addProperty("spawned_gertrud", true);
-				savePlayerFile(f, json);
+				savePlayerFile(modPlayerFile, json);
 			}
 
 		} catch(Exception e)
@@ -80,7 +93,7 @@ public class DuckFriendSpawn
 		}
 	}
 
-	private JsonObject generateDefaultJson(File file)
+	private static JsonObject generateDefaultJson(File file)
 	{
 		JsonObject json = new JsonObject();
 		json.addProperty("spawned_gertrud", false);
@@ -88,7 +101,7 @@ public class DuckFriendSpawn
 		return json;
 	}
 
-	private void savePlayerFile(File file, JsonObject json)
+	private static void savePlayerFile(File file, JsonObject json)
 	{
 		try(Writer writer = new FileWriter(file))
 		{
