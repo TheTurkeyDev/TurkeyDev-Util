@@ -34,5 +34,8 @@
   "block.turkeydevutil.greed_diamond_ore": "Greed Diamond Ore",
   "block.turkeydevutil.sugar_copper_ore": "Sugar Copper Ore",
   "block.turkeydevutil.sugar_iron_ore": "Sugar Iron Ore",
-  "block.turkeydevutil.sugar_redstone_ore": "Sugar Redstone Ore"
+  "block.turkeydevutil.sugar_redstone_ore": "Sugar Redstone Ore",
+
+  "entity.turkeydevutil.duck": "I'm a Duck",
+  "entity.turkeydevutil.turkey": "Boxiest Turkey"
 }
