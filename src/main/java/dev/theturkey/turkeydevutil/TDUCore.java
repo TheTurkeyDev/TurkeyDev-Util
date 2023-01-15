@@ -1,6 +1,7 @@
 package dev.theturkey.turkeydevutil;
 
 import dev.theturkey.turkeydevutil.client.ClientHandler;
+import dev.theturkey.turkeydevutil.commands.TDUCommands;
 import dev.theturkey.turkeydevutil.entities.TDUEntityType;
 import dev.theturkey.turkeydevutil.items.TDUItems;
 import dev.theturkey.turkeydevutil.listeners.DuckFriendSpawn;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -70,5 +72,11 @@ public class TDUCore
 	public void onServerStarting(ServerStartingEvent event)
 	{
 		// do something when the server starts
+	}
+
+	@SubscribeEvent
+	public void onCommandsRegister(RegisterCommandsEvent event)
+	{
+		new TDUCommands(event.getDispatcher());
 	}
 }

@@ -8,15 +8,12 @@ import com.google.gson.JsonParser;
 import dev.theturkey.turkeydevutil.TDUCore;
 import dev.theturkey.turkeydevutil.entities.Duck;
 import dev.theturkey.turkeydevutil.entities.TDUEntityType;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -32,7 +29,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class DuckFriendSpawn
 {
@@ -154,20 +150,7 @@ public class DuckFriendSpawn
 	{
 		for(Duck d : getDucks(event.getEntityLiving()))
 		{
-			ServerPlayer player = (ServerPlayer) event.getEntityLiving();
-			BlockPos blockpos = player.getRespawnPosition();
-			ServerLevel serverlevel = player.server.getLevel(player.getRespawnDimension());
-			float f = player.getRespawnAngle();
-			if(serverlevel != null && blockpos != null)
-			{
-				Optional<Vec3> optional = Player.findRespawnPositionAndUseSpawnBlock(serverlevel, blockpos, f, true, true);
-				if(optional.isPresent())
-				{
-					d.changeDimension(serverlevel);
-					Vec3 vec = optional.get();
-					d.teleportTo(vec.x, vec.y, vec.z);
-				}
-			}
+			d.kill();
 		}
 	}
 
@@ -213,5 +196,10 @@ public class DuckFriendSpawn
 		}
 
 		return ducks;
+	}
+
+	public static void spawnDuckForPlayer(String playerUUID)
+	{
+		ducksToSpawn.add(playerUUID);
 	}
 }
