@@ -5,7 +5,6 @@ import dev.theturkey.turkeydevutil.entities.ai.FollowOwnerDimensionGoal;
 import dev.theturkey.turkeydevutil.util.TDUSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -45,6 +44,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class Duck extends TamableAnimal implements RangedAttackMob
 {
@@ -226,9 +227,7 @@ public class Duck extends TamableAnimal implements RangedAttackMob
 	{
 		boolean flag = p_30372_.hurt(DamageSource.mobAttack(this), (float) ((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 		if(flag)
-		{
 			this.doEnchantDamageEffects(this, p_30372_);
-		}
 
 		return flag;
 	}
@@ -239,22 +238,16 @@ public class Duck extends TamableAnimal implements RangedAttackMob
 		return (flag & 4) != 0;
 	}
 
-	public boolean isSpecialDuck()
-	{
-		Component name = this.getCustomName();
-		return name != null && name.getString().equals("Gertrud");
-	}
-
 	@Override
 	public boolean removeWhenFarAway(double p_21542_)
 	{
-		return !isSpecialDuck();
+		return !isTame();
 	}
 
 	@Override
 	public boolean requiresCustomPersistence()
 	{
-		return this.isPassenger() || isSpecialDuck();
+		return this.isPassenger() || isTame();
 	}
 
 	@Override
