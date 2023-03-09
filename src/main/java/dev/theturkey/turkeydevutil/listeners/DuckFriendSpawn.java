@@ -130,7 +130,6 @@ public class DuckFriendSpawn
 		duck.setOwnerUUID(player.getUUID());
 		duck.setPersistenceRequired();
 		duck.setHealth(20f);
-
 		try
 		{
 			File modPlayerFile = modPlayerFiles.get(player.getStringUUID());
@@ -232,7 +231,7 @@ public class DuckFriendSpawn
 	 * @param player the player
 	 * @return the player's ducks
 	 */
-	public Optional<Duck> getDuck(Entity player)
+	public static Optional<Duck> getDuck(Entity player)
 	{
 		if(player.level.isClientSide())
 			return Optional.empty();

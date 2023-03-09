@@ -19,6 +19,8 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -65,6 +67,21 @@ public class TDUCore
 	{
 		MinecraftForge.EVENT_BUS.register(new UnstableIngotListener());
 		MinecraftForge.EVENT_BUS.register(new DuckFriendSpawn());
+
+
+		if(ModList.get().isLoaded("waystones"))
+		{
+			try
+			{
+				Object c = Class.forName("dev.theturkey.turkeydevutil.listeners.WaystoneListener").getConstructor().newInstance();
+				MinecraftForge.EVENT_BUS.register(c);
+			} catch(Exception e)
+			{
+				LOGGER.error("Failed to load support for Waystones!");
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	// You can use SubscribeEvent and let the Event Bus discover methods to call
